@@ -6,7 +6,7 @@ import './App.css'
 
 function App() {
   return (
-    <div id="app" style={{height: '100%'}}>
+    <div id="app" style={{height: '100vh', width: '100vw'}}>
       <AQIMap />
     </div>
   );
