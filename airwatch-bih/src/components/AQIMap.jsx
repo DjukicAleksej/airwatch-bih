@@ -7,35 +7,35 @@ import "leaflet/dist/leaflet.css";
 const TOKEN = import.meta.env.VITE_WAQI_TOKEN;
 
 const cities = [
-  { name: "Sarajevo", lat: 43.856, lng: 18.413 },
-  { name: "Banja Luka", lat: 44.772, lng: 17.191 },
-  { name: "Tuzla", lat: 44.538, lng: 18.667 },
-  { name: "Mostar", lat: 43.343, lng: 17.807 },
-  { name: "Zenica", lat: 44.203, lng: 17.908 },
-  { name: "Bijeljina", lat: 44.758, lng: 19.216 },
-  { name: "Prijedor", lat: 44.979, lng: 16.714 },
-  { name: "Doboj", lat: 44.738, lng: 18.176 },
-  { name: "Brčko", lat: 44.873, lng: 18.810 },
-  { name: "Gradiška", lat: 45.030, lng: 17.254 },
-  { name: "Goražde", lat: 43.673, lng: 18.958 },
-  { name: "Bihać", lat: 44.816, lng: 15.870 },
-  { name: "Livno", lat: 43.826, lng: 17.015 },
-  { name: "Trebinje", lat: 42.711, lng: 18.345 },
-  { name: "Čapljina", lat: 43.095, lng: 17.708 },
-  { name: "Konjic", lat: 43.650, lng: 17.951 },
-  { name: "Bugojno", lat: 44.056, lng: 17.428 },
-  { name: "Travnik", lat: 44.229, lng: 17.664 },
-  { name: "Foča", lat: 43.530, lng: 18.650 },
-  { name: "Široki Brijeg", lat: 43.373, lng: 17.557 },
-  { name: "Cazin", lat: 44.575, lng: 15.971 },
-  { name: "Maglaj", lat: 44.666, lng: 18.111 },
-  { name: "Vitez", lat: 44.172, lng: 17.673 },
-  { name: "Livno", lat: 43.825, lng: 17.015 },
-  { name: "Neum", lat: 42.925, lng: 17.635 },
-  { name: "Kakanj", lat: 44.135, lng: 18.113 },
-  { name: "Žepče", lat: 44.420, lng: 18.039 },
-  { name: "Sarajevo-Romanija", lat: 43.850, lng: 18.480 },
-  { name: "Ilidža", lat: 43.831, lng: 18.343 },
+  { name: "Sarajevo", lat: 43.856, lng: 18.413 ,slug: "sarajevo"},
+  { name: "Banja Luka", lat: 44.772, lng: 17.191 ,slug: "banja luka" },
+  { name: "Tuzla", lat: 44.538, lng: 18.667 ,slug: "tuzla" },
+  { name: "Mostar", lat: 43.343, lng: 17.807 ,slug: "mostar" },
+  { name: "Zenica", lat: 44.203, lng: 17.908 ,slug: "zenica" },
+  { name: "Bijeljina", lat: 44.758, lng: 19.216 ,slug: "bijeljina" },
+  { name: "Prijedor", lat: 44.979, lng: 16.714,slug: "prijedor" },
+  { name: "Doboj", lat: 44.738, lng: 18.176 ,slug: "doboj" },
+  { name: "Brčko", lat: 44.873, lng: 18.810 ,slug: "brcko" },
+  { name: "Gradiška", lat: 45.030, lng: 17.254, slug: "gradiska" },
+  { name: "Goražde", lat: 43.673, lng: 18.958 , slug: "gorazde" },
+  { name: "Bihać", lat: 44.816, lng: 15.870 ,slug: "bihac"  },
+  { name: "Livno", lat: 43.826, lng: 17.015 ,   slug: "livno" },
+  { name: "Trebinje", lat: 42.711, lng: 18.345 , slug: "trebinje" },
+  { name: "Čapljina", lat: 43.095, lng: 17.708, slug: "capljina" },
+  { name: "Konjic", lat: 43.650, lng: 17.951 ,  slug: "konjic" },
+  { name: "Bugojno", lat: 44.056, lng: 17.428 , slug: "bugojno" },
+  { name: "Travnik", lat: 44.229, lng: 17.664 , slug: "travnik" },
+  { name: "Foča", lat: 43.530, lng: 18.650 ,    slug: "foca" },
+  { name: "Široki Brijeg", lat: 43.373, lng: 17.557 ,   slug: "siroki brijeg" },
+  { name: "Cazin", lat: 44.575, lng: 15.971 , slug: "cazin" },
+  { name: "Maglaj", lat: 44.666, lng: 18.111 , slug: "maglaj" },
+  { name: "Vitez", lat: 44.172, lng: 17.673 , slug: "vitez" },
+  { name: "Livno", lat: 43.825, lng: 17.015 , slug: "livno" },
+  { name: "Neum", lat: 42.925, lng: 17.635 , slug: "neum" },
+  { name: "Kakanj", lat: 44.135, lng: 18.113 , slug: "kakanj" },
+  { name: "Žepče", lat: 44.420, lng: 18.039 , slug: "zepce" },
+  { name: "Sarajevo-Romanija", lat: 43.850, lng: 18.480 , slug: "sarajevo-romanija" },
+  { name: "Ilidža", lat: 43.831, lng: 18.343 , slug: "ilidza" },
 ];
 
 
@@ -57,7 +57,7 @@ export default function AQIMap() {
     return (
         <MapContainer
             center={[44.2, 17.7]}
-            zoom={7}
+            zoom={8}
             style={{ height: "100vh", width: "100%" }}
             maxBounds={[
                 [42.5, 15.5],
