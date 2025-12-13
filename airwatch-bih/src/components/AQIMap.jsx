@@ -4,13 +4,12 @@ import { useEffect, useState } from "react";
 import "leaflet/dist/leaflet.css";
 import "leaflet.heat";
 
-const apiKey = import.meta.env.VITE_OPENAQ_API_KEY;
+const TOKEN = import.meta.env.VITE_WAQI_TOKEN;
 
 const cities = [
     {name: "Prijedor", lat:44.979, lng:16.714},
     {name: "Banja Luka", lat:44.772, lng:17.191},
     {name: "Tuzla", lat:44.538, lng:18.667},
-    {name: "Sarajevo", lat:43.856, lng:18.413},
     {name: "Mostar", lat:43.343, lng:17.807},
     {name: "Zenica", lat:44.203, lng:17.908},
     {name: "Bijeljina", lat:44.758, lng:19.216},
@@ -30,14 +29,15 @@ function findClosestPM25(city, locations){//Basically I find the closes measurem
     locations.forEach((loc) => {
         if(!loc.coordinates) return;
         const d =
-        Math.abs(m.coordinates.latitude - city.lat) +
-        Math.abs(m.coordinates.longitude - city.lng);
+        Math.abs(loc.coordinates.latitude - city.lat) +
+        Math.abs(loc.coordinates.longitude - city.lng);
         if(d < minDist){
             minDist = d;
             closest = loc;
         }
     });
-    return closest?.measurements?.[0]?.value ?? null;
+    const pm25 = closest?.parameters?.find((p) => p.parameter === "pm25")?.lastValue;
+    return pm25 ??null;
 }
 
 function createIcon(color){
@@ -56,6 +56,7 @@ function HeatmapLayer({points}) {
 
     useEffect(() => {
         if(!points.length) return;
+
         const heat = L.heatLayer(points, {radius: 25, blur: 15, maxZoom: 17});
         heat.addTo(map);
         return () => map.removeLayer(heat);
@@ -69,18 +70,15 @@ export default function AQIMap() {
     useEffect(() => {
         const fetchData = async () => {
           const res = await fetch(
-            "https://api.openaq.org/v3/locations?country=BA&limit=1000&parameter=pm25",
-            {headers: { "X-API-Key": import.meta.env.VITE_OPENAQ_API_KEY },
-          }
+            `https://api.waqi.info/feed/${city}/?token=${TOKEN}`,
           );
           const json = await res.json();
           setAqiData(json.results || []);
-          return json.results || [];
         };
         
         fetchData();
-        const interval = setInterval(fetchData, 10 * 60 * 1000); // for 10 min refresh
-        return () => clearInterval(interval);
+        const id = setInterval(fetchData, 10 * 60 * 1000); // for 10 min refresh
+        return () => clearInterval(id);
     }, []);
 
     const heatPoints = cities
@@ -107,12 +105,12 @@ export default function AQIMap() {
             <HeatmapLayer points={heatPoints} />
             
             {cities.map((city) => {
-                const pm25 = aqiData.find((l) => l.name?.includes(city.name))?.parameters?.find((p) => p.parameter === "pm25")?.lastValue ?? 0;
+                const pm25 = findClosestPM25(city, aqiData);
                 return (
                     <Marker 
                     key={city.name} 
                     position={[city.lat, city.lng]} 
-                    icon={createIcon(getMarkerColor(pm25))}>
+                    icon={createIcon(getMarkerColor(pm25 ?? 0))}>
                     <Popup>
                     <b>{city.name}</b> <br />
                     PM2.5: {pm25} µg/m³
