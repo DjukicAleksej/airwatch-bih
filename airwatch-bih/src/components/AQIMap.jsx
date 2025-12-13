@@ -14,6 +14,7 @@ const cities = [
     {name: "Mostar", lat:43.343, lng:17.807},
     {name: "Zenica", lat:44.203, lng:17.908},
     {name: "Bijeljina", lat:44.758, lng:19.216},
+    { name: "Sarajevo", lat: 43.856, lng: 18.413 }
 ];
 
 function getMarkerColor(pm25) {
@@ -22,6 +23,21 @@ function getMarkerColor(pm25) {
     if (pm25 <= 55.4) return 'orange';
     if (pm25 <= 150.4) return 'red';
     return "purple";
+}
+function findClosestPM25(city, locations){//Basically I find the closes measurement to the city even if it does not have a station I can see aqi of every city
+    let closest = null;
+    let minDist = Infinity;
+    locations.forEach((loc) => {
+        if(!loc.coordinates) return;
+        const d =
+        Math.abs(m.coordinates.latitude - city.lat) +
+        Math.abs(m.coordinates.longitude - city.lng);
+        if(d < minDist){
+            minDist = d;
+            closest = loc;
+        }
+    });
+    return closest?.measurements?.[0]?.value ?? null;
 }
 
 function createIcon(color){
@@ -53,11 +69,13 @@ export default function AQIMap() {
     useEffect(() => {
         const fetchData = async () => {
           const res = await fetch(
-            "https://api.openaq.org/v3/locations?county=BA&limit=100",
-            {headers: { "X-API-Key": apiKey }}
+            "https://api.openaq.org/v3/locations?country=BA&limit=1000&parameter=pm25",
+            {headers: { "X-API-Key": import.meta.env.VITE_OPENAQ_API_KEY },
+          }
           );
           const json = await res.json();
           setAqiData(json.results || []);
+          return json.results || [];
         };
         
         fetchData();
@@ -65,13 +83,13 @@ export default function AQIMap() {
         return () => clearInterval(interval);
     }, []);
 
-    const heatPoints = aqiData
-    .filter((l) => l.coordinates)
-    .map((l) => {
-        const pm25 = l.parameters?.find((p) => p.parameter === "pm25")?.lastValue ?? 0;
-        return [l.coordinates.latitude, l.coordinates.longitude, Math.min(pm25 / 150, 1) ]; // Normalize intensity
-    });
-
+    const heatPoints = cities
+     .map((city) => {
+        const pm25 = findClosestPM25(city, aqiData);
+        if(pm25 === null) return null;
+        return [city.lat, city.lng,Math.min(pm25 / 150, 1)];
+     })
+.filter(Boolean);
     return (
         <MapContainer
             center={[44.2, 17.7]}
