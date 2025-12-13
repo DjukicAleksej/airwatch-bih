@@ -39,27 +39,25 @@ function HeatmapLayer({points}) {
     const map = useMap();
 
     useEffect(() => {
-        if(!points || points.length === 0) return;
+        if(!points.length) return;
         const heat = L.heatLayer(points, {radius: 25, blur: 15, maxZoom: 17});
         heat.addTo(map);
+        return () => map.removeLayer(heat);
     }, [map, points]);
     return null;
 }
 
 export default function AQIMap() {
-    const [data, setData] = useState([]);
+    const [aqiData, setAqiData] = useState([]);
 
     useEffect(() => {
         const fetchData = async () => {
-            try {
-                const response = await fetch("https://api.openaq.org/v3/locations?country=BA", {
-                    headers: { "X-API-Key": apiKey },
-                });
-                const data = await response.json();
-                setAqiData(data.results);
-            } catch(err) {
-                console.error("Error fetching AQI DATA:",err);
-            }
+          const res = await fetch(
+            "https://api.openaq.org/v3/locations?county=BA&limit=100",
+            {headers: { "X-API-Key": apiKey }}
+          );
+          const json = await res.json();
+          setAqiData(json.results || []);
         };
         
         fetchData();
@@ -67,19 +65,18 @@ export default function AQIMap() {
         return () => clearInterval(interval);
     }, []);
 
-    const heatPoints = data
-    .filter((loc) => loc.coordinates)
-    .map((loc) => {
-        const pm25 = loc.parameters?.find((p) => p.parameter === "pm25")?.lastValue ?? 0;
-        const intensity = Math.min(pm25 / 150, 1); // 0-1 moze biti ohoho
-        return [loc.coordinates.latitude, loc.coordinates.longitude, intensity];
+    const heatPoints = aqiData
+    .filter((l) => l.coordinates)
+    .map((l) => {
+        const pm25 = l.parameters?.find((p) => p.parameter === "pm25")?.lastValue ?? 0;
+        return [l.coordinates.latitude, l.coordinates.longitude, Math.min(pm25 / 150, 1) ]; // Normalize intensity
     });
 
     return (
         <MapContainer
             center={[44.2, 17.7]}
             zoom={7}
-            style={{ height: "100%", width: "100%" }}
+            style={{ height: "100vh", width: "100%" }}
             maxBounds={[
                 [42.5, 15.5],
                 [45.5, 19.5]
@@ -90,13 +87,16 @@ export default function AQIMap() {
                 attribution="&copy; OpenStreetMap contributors"
             />
             <HeatmapLayer points={heatPoints} />
-            {/* City Markers */}
+            
             {cities.map((city) => {
-                const pm25 = aqiData.find((loc) => loc.name.includes(city.name))?.parameters?.find((p) => p.parameter === "pm25")?.lastValue ?? 0;
+                const pm25 = aqiData.find((l) => l.name?.includes(city.name))?.parameters?.find((p) => p.parameter === "pm25")?.lastValue ?? 0;
                 return (
-                    <Marker key={city.name} position={[city.lat, city.lng]} icon={createIcon(getMarkerColor(pm25))}>
+                    <Marker 
+                    key={city.name} 
+                    position={[city.lat, city.lng]} 
+                    icon={createIcon(getMarkerColor(pm25))}>
                     <Popup>
-                    {city.name} <br />
+                    <b>{city.name}</b> <br />
                     PM2.5: {pm25} µg/m³
                     </Popup>
                     </Marker>
