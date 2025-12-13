@@ -2,7 +2,7 @@ import L from "leaflet";
 import { MapContainer, TileLayer, useMap, Marker, Popup } from "react-leaflet";
 import { useEffect, useState } from "react";
 import "leaflet/dist/leaflet.css";
-import "leaflet.heat";
+
 
 const TOKEN = import.meta.env.VITE_WAQI_TOKEN;
 
@@ -16,29 +16,23 @@ const cities = [
     { name: "Sarajevo", lat: 43.856, lng: 18.413 }
 ];
 
-function getMarkerColor(pm25) {
-    if (pm25 <= 12) return 'green';
-    if (pm25 <= 34.5) return 'yellow';
-    if (pm25 <= 55.4) return 'orange';
-    if (pm25 <= 150.4) return 'red';
-    return "purple";
+function getMarkerColor(aqi) {
+    if (aqi <= 50) return 'green';
+    if (aqi <= 100) return 'yellow';
+    if (aqi <= 150) return 'orange';
+    if (aqi <= 200) return 'red';
+    if (aqi <= 300) return 'purple';
+    return "maroon";
 }
-function findClosestPM25(city, locations){//Basically I find the closes measurement to the city even if it does not have a station I can see aqi of every city
-    let closest = null;
-    let minDist = Infinity;
-    locations.forEach((loc) => {
-        if(!loc.coordinates) return;
-        const d =
-        Math.abs(loc.coordinates.latitude - city.lat) +
-        Math.abs(loc.coordinates.longitude - city.lng);
-        if(d < minDist){
-            minDist = d;
-            closest = loc;
-        }
-    });
-    const pm25 = closest?.parameters?.find((p) => p.parameter === "pm25")?.lastValue;
-    return pm25 ??null;
+function getAQIDescription(aqi) {
+    if (aqi <= 50) return 'Good';
+    if (aqi <= 100) return 'Moderate';
+    if (aqi <= 150) return 'Unhealthy for Sensitive Groups';
+    if (aqi <= 200) return 'Unhealthy';
+    if (aqi <= 300) return 'Very Unhealthy';
+    return "Hazardous";
 }
+
 
 function createIcon(color){
     return new L.Icon({
@@ -51,43 +45,8 @@ function createIcon(color){
     });
 }
 
-function HeatmapLayer({points}) {
-    const map = useMap();
-
-    useEffect(() => {
-        if(!points.length) return;
-
-        const heat = L.heatLayer(points, {radius: 25, blur: 15, maxZoom: 17});
-        heat.addTo(map);
-        return () => map.removeLayer(heat);
-    }, [map, points]);
-    return null;
-}
-
 export default function AQIMap() {
-    const [aqiData, setAqiData] = useState([]);
-
-    useEffect(() => {
-        const fetchData = async () => {
-          const res = await fetch(
-            `https://api.waqi.info/feed/${city}/?token=${TOKEN}`,
-          );
-          const json = await res.json();
-          setAqiData(json.results || []);
-        };
-        
-        fetchData();
-        const id = setInterval(fetchData, 10 * 60 * 1000); // for 10 min refresh
-        return () => clearInterval(id);
-    }, []);
-
-    const heatPoints = cities
-     .map((city) => {
-        const pm25 = findClosestPM25(city, aqiData);
-        if(pm25 === null) return null;
-        return [city.lat, city.lng,Math.min(pm25 / 150, 1)];
-     })
-.filter(Boolean);
+    const [aqiData, setAqiData] = useState({});
     return (
         <MapContainer
             center={[44.2, 17.7]}
@@ -102,22 +61,14 @@ export default function AQIMap() {
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 attribution="&copy; OpenStreetMap contributors"
             />
-            <HeatmapLayer points={heatPoints} />
+            {/* Tile layer from WAQI providing AQI tiles */}
+            <TileLayer
+                url={`https://tiles.waqi.info/tiles/usepa-aqi/{z}/{x}/{y}.png?token=${TOKEN}`}
+  attribution='Map data &copy; <a href="https://aqicn.org">WAQI</a>'
+            />
             
-            {cities.map((city) => {
-                const pm25 = findClosestPM25(city, aqiData);
-                return (
-                    <Marker 
-                    key={city.name} 
-                    position={[city.lat, city.lng]} 
-                    icon={createIcon(getMarkerColor(pm25 ?? 0))}>
-                    <Popup>
-                    <b>{city.name}</b> <br />
-                    PM2.5: {pm25} µg/m³
-                    </Popup>
-                    </Marker>
-                );
-            })}
+            
+    
         </MapContainer>
     );
 }
