@@ -54,37 +54,56 @@ function createIcon(){
 
 export default function AQIMap() {
     
-    return (
-        <MapContainer
-            center={[44.2, 17.7]}
-            zoom={8}
-            style={{ height: "100vh", width: "100%" }}
-            maxBounds={[
-                [42.5, 15.5],
-                [45.5, 19.5]
-            ]}
-        >
-            <TileLayer
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                attribution="&copy; OpenStreetMap contributors"
-            />
-            {/* Tile layer from WAQI providing AQI tiles */}
-            <TileLayer
-                url={`https://tiles.waqi.info/tiles/usepa-aqi/{z}/{x}/{y}.png?token=${TOKEN}`}
-  attribution='Map data &copy; <a href="https://aqicn.org">WAQI</a>'
-            />
-            {cities.map((city) => (
-                <Marker key={city.name} position={[city.lat, city.lng]} icon={createIcon()}>
-                
-                <Popup>
-                <b>
-                {city.name}
-                </b> <br />
-                <a href ={`https://aqicn.org/city/${city.name.toLowerCase()}/`} target="_blank" rel="noreferrer">More information on AQI for {city.name}.</a>
+useEffect(() => {
+    //Ucitaj waqi jednom buraz
+    if (!window._aqiFeed) {
+        const script = document.createElement("script");
+        script.type = "text/javascript";
+        script.src = "//feed.aqicn.org/feed/feed.v1.js";;
+        script.async = true;
+        document.body.appendChild(script);
+    }
+}, []);
+
+const initWidget = (city) => {
+    if(!window._aqiFeed) return;
+    window._aqiFeed({
+        container : `aqi-widget-${city.slug}`,
+        city: city.slug,
+        display: "%details",
+    });
+};
+
+
+return (
+    <MapContainer
+        center={[44.2, 17.7]}
+        zoom={8}
+        style={{ height: "100vh", width: "100%" }}
+        maxBounds={[
+            [42.5, 15.5],
+            [45.5, 19.5]
+        ]}
+    >
+        <TileLayer
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            attribution="&copy; OpenStreetMap contributors"
+        />
+        {/* Tile layer from WAQI providing AQI tiles */}
+        <TileLayer
+            url={`https://tiles.waqi.info/tiles/usepa-aqi/{z}/{x}/{y}.png?token=${TOKEN}`}
+            attribution='Map data &copy; <a href="https://aqicn.org">WAQI</a>'
+        />
+        {cities.map((city) => (
+            <Marker key={city.slug} position={[city.lat, city.lng]} icon={createIcon()}
+                eventHandlers={{
+                    popupopen: () => initWidget(city),
+                }}>
+                <Popup minWidth={200}>
+                    
                 </Popup>
-                </Marker>
-            ))}
-    
-        </MapContainer>
-    );
+            </Marker>
+        ))}
+    </MapContainer>
+);
 }
