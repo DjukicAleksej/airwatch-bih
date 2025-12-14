@@ -8,14 +8,11 @@ const TOKEN = import.meta.env.VITE_WAQI_TOKEN;
 
 const cities = [
   { name: "Sarajevo", lat: 43.856, lng: 18.413 ,slug: "sarajevo",station:"@9263"},
-  { name: "Banja Luka", lat: 44.772, lng: 17.191 ,slug: "banja luka" ,station:"@84268"},
+  { name: "Banja-Luka", lat: 44.772, lng: 17.191 ,slug: "banja luka" ,station:"@84268"},
   { name: "Tuzla", lat: 44.538, lng: 18.667 ,slug: "tuzla" ,station: "@9319"},
-  { name: "Mostar", lat: 43.343, lng: 17.807 ,slug: "mostar" },
+  { name: "Mostar", lat: 43.343, lng: 17.807 ,slug: "mostar" ,station:"@14726"},
   { name: "Zenica", lat: 44.203, lng: 17.908 ,slug: "zenica",station: "@12656" },
-  { name: "Prijedor", lat: 44.979, lng: 16.714,slug: "prijedor",station:"@84268" },
-  { name: "Doboj", lat: 44.738, lng: 18.176 ,slug: "doboj" ,station:"@10095"},
   { name: "Brčko", lat: 44.873, lng: 18.810 ,slug: "brcko" ,station : "@463582"},
-  { name: "Gradiška", lat: 45.030, lng: 17.254, slug: "gradiska",station:"@84268" },
   { name: "Goražde", lat: 43.673, lng: 18.958 , slug: "gorazde" ,station:"@9271"},
   { name: "Bihać", lat: 44.816, lng: 15.870 ,slug: "bihac"  ,station:"@13578"},
   { name: "Trebinje", lat: 42.711, lng: 18.345 , slug: "trebinje" ,station:"@195118"},
@@ -65,9 +62,9 @@ return (
             attribution='Map data &copy; <a href="https://aqicn.org">WAQI</a>'
         />
         {cities.map((city) => (
-            <Marker key={city.slug} position={[city.lat, city.lng]} icon={createIcon()}>
+            <Marker key={city.station} position={[city.lat, city.lng]} icon={createIcon()}>
                 <Popup minWidth={200}>
-                    <AQIWidget city={city.slug} />
+                    <AQIWidget station={city.station} />
                 </Popup>
             </Marker>
         ))}
