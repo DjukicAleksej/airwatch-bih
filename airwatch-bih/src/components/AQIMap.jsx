@@ -2,7 +2,7 @@ import L from "leaflet";
 import { MapContainer, TileLayer, useMap, Marker, Popup } from "react-leaflet";
 import { useEffect, useState } from "react";
 import "leaflet/dist/leaflet.css";
-
+import AQIWidget from "./AQIWidget.jsx";
 
 const TOKEN = import.meta.env.VITE_WAQI_TOKEN;
 
@@ -30,7 +30,6 @@ const cities = [
   { name: "Cazin", lat: 44.575, lng: 15.971 , slug: "cazin" },
   { name: "Maglaj", lat: 44.666, lng: 18.111 , slug: "maglaj" },
   { name: "Vitez", lat: 44.172, lng: 17.673 , slug: "vitez" },
-  { name: "Livno", lat: 43.825, lng: 17.015 , slug: "livno" },
   { name: "Neum", lat: 42.925, lng: 17.635 , slug: "neum" },
   { name: "Kakanj", lat: 44.135, lng: 18.113 , slug: "kakanj" },
   { name: "Žepče", lat: 44.420, lng: 18.039 , slug: "zepce" },
@@ -54,25 +53,6 @@ function createIcon(){
 
 export default function AQIMap() {
     
-useEffect(() => {
-    //Ucitaj waqi jednom buraz
-    if (!window._aqiFeed) {
-        const script = document.createElement("script");
-        script.type = "text/javascript";
-        script.src = "//feed.aqicn.org/feed/feed.v1.js";;
-        script.async = true;
-        document.body.appendChild(script);
-    }
-}, []);
-
-const initWidget = (city) => {
-    if(!window._aqiFeed) return;
-    window._aqiFeed({
-        container : `aqi-widget-${city.slug}`,
-        city: city.slug,
-        display: "%details",
-    });
-};
 
 
 return (
@@ -95,12 +75,9 @@ return (
             attribution='Map data &copy; <a href="https://aqicn.org">WAQI</a>'
         />
         {cities.map((city) => (
-            <Marker key={city.slug} position={[city.lat, city.lng]} icon={createIcon()}
-                eventHandlers={{
-                    popupopen: () => initWidget(city),
-                }}>
+            <Marker key={city.slug} position={[city.lat, city.lng]} icon={createIcon()}>
                 <Popup minWidth={200}>
-                    
+                    <AQIWidget city={city.slug} />
                 </Popup>
             </Marker>
         ))}
