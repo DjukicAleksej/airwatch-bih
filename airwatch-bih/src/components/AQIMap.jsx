@@ -46,7 +46,7 @@ return (
     <MapContainer
         center={[44.2, 17.7]}
         zoom={8}
-        style={{ height: "100vh", width: "100%" }}
+        style={{ height: "70vh", width: "80%" }}
         maxBounds={[
             [42.5, 15.5],
             [45.5, 19.5]

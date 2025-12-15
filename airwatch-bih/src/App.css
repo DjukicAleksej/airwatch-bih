@@ -1,4 +1,23 @@
-html , body , #root {
-  height: 100%;
-  margin: 0;
+#app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
+}
+
+.nav { /* for the overall navigation , the style could be better but this is the beginning */
+  padding:14px 24px;
+  background: #0f172a;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.nav a{
+  color: #cbd5f5;
+  margin-left: 16px;
+  text-decoration: none;
 }
