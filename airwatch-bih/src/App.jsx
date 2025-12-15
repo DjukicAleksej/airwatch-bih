@@ -9,11 +9,9 @@ function App() {
     <div id="app" style={{height: '100vh', width: '100vw'}}>
       <Navbar />
       <Hero />
-      <main id="map">
       <div className="map-section">
       <AQIMap />
       </div>
-      </main>
       <Footer />
     </div>
   );
