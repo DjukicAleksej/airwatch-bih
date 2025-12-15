@@ -1,10 +1,14 @@
 export default function Hero(){
     return (
-        <section className="hero">
-            <h1>Air Quality in Bosnia & Herzegovina</h1>
+        <div className = "hero">
+            <h1>
+                Air Quality <br />
+                <span> Across Bosnia & Herzegovina</span>
+
+            </h1>
             <p>
-                Real-time air pollution data from official monitoring stations.
+                Real-time air pollution data powered by WAQI stations.
             </p>
-        </section>
+        </div>
     );
 }

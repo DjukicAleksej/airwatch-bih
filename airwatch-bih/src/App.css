@@ -48,11 +48,44 @@ main {
 
 
 .hero {
-  padding: 40px 24px;
-  background: saddlebrown;
-  color: black;
-}
+  position: absolute;
+  top: 140px;
+  left: 60px;
+  max-width: 520px;
 
+  background: rgba(2,6,23,0.6);
+  backdrop-filter: blur(18px);
+  border-radius: 24px;
+  padding: 32px;
+
+  border: 1px solid rgba(255,255,255,0.06);
+
+  animation: fadeUp 0.8s ease forwards;
+  z-index: 500;
+}
+.hero h1{
+  font-size: 44px;
+  line-height: 1.1;
+  font-weight: 900;
+}
+.hero h1 span {
+  color: #38bdf8;
+}
+.hero p {
+  margin-top: 16px;
+  color: #cbd5f5;
+  font-size: 15px;
+}
+@keyFrames fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);  
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 .footer {
   text-decoration: none;
   text-align: center;
