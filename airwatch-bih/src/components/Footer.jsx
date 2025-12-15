@@ -1,7 +1,23 @@
 export default function Footer() {
     return (
-        <div className="footer">
-            Made by <a href="https://github.com/DjukicAleksej"><b>DjukicAleksej</b></a> as a project for <a href="https://hackclub.com/"><b>Hack club</b></a>
-        </div>
+        <footer clasName="footer">
+            <div className="footer-inner">
+                <div className="footer-left">
+                    <h3>AQI BIH</h3>
+                    <p> Real-time air quality data for Bosnia & Herzegovina.
+                        Powered by WAQI.
+                    </p>
+                </div>
+                <div className="footer-right">
+                    <p>
+                        Made by{" "}
+                        <span className="author">DjukicAleksej</span>
+                    </p>
+                    <p className="hackclub">
+                        Project for <span>Hack Club</span>
+                    </p>
+                </div>
+            </div>
+        </footer>
     );
 }
