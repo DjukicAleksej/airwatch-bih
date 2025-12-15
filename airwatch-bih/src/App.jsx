@@ -10,7 +10,9 @@ function App() {
       <Navbar />
       <Hero />
       <main id="map">
+      <div className="map-section">
       <AQIMap />
+      </div>
       </main>
       <Footer />
     </div>

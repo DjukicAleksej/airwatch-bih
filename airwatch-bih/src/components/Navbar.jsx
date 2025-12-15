@@ -5,7 +5,7 @@ export default function Navbar(){
             <div className="links">
                 <a href="#">Map</a>
                 <a href="#">Prevention</a>
-                <a href="waqi.info">WAQI</a>
+                <a href="https://waqi.info" target="_blank">WAQI</a>
             </div>
         </div>
     );
