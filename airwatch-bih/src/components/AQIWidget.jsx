@@ -41,7 +41,7 @@ export default function AQIWidget({station}) {
             <hr />
             <small>
                 source:{" "}
-                <a href="https://api.waqi.info/feed/${station}" target="_blank" rel="noreferrer">
+                <a href="https://waqi.info/" target="_blank" rel="noreferrer">
                     WAQI
                 </a>
             </small>
