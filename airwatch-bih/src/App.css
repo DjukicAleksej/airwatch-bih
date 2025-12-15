@@ -3,21 +3,29 @@
   display: flex;
   flex-direction: column;
 }
-
+#map {
+  height: 100vh;
+  width: 100vw;
+  z-index: 0;
+}
 main {
   flex: 1;
 }
 
-.nav { /* for the overall navigation , the style could be better but this is the beginning */
-  padding:14px 24px;
-  background: #0f172a;
-  color: white;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+
+
+
+.hero {
+  padding: 40px 24px;
+  background: saddlebrown;
+  color: black;
 }
-.nav a{
-  color: #cbd5f5;
-  margin-left: 16px;
+
+.footer {
   text-decoration: none;
+  text-align: center;
+  padding:12px;
+  background: #020617;
+  color: #94a3b8;
+  font-size: 14px;
 }

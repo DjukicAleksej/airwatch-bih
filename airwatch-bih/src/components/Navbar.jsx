@@ -1,11 +1,12 @@
 export default function Navbar(){
     return(
-        <nav className="nav">
-        <h3>🇧🇦 BIH Air Quality</h3>
-        <div>
-            <a href="#map">Map</a>
-            <a href="https://waqi.info/" target="_blank">WAQI</a>
+        <div className="topbar">
+            <div className="logo">AQI BIH</div>
+            <div className="links">
+                <a href="#">Map</a>
+                <a href="#">Prevention</a>
+                <a href="waqi.info">WAQI</a>
+            </div>
         </div>
-        </nav>
     );
 }
