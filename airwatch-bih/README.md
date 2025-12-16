@@ -61,8 +61,8 @@ Each city is mapped to a **specific WAQI station ID** for accuracy.
 
 ### 1️⃣ Clone the repository
 ```bash
-git clone https://github.com/DjukicAleksej/air-quality-map-bih.git
-cd air-quality-map-bih
+git clone https://github.com/DjukicAleksej/airwatch-bih.git
+cd airwatch-bih
 
 2️⃣ Install dependencies
 
