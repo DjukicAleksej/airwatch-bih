@@ -1,3 +1,4 @@
+import "./Prevention.css";
 export default function Prevention(){
     return (
         <div className="page prevention">
@@ -17,7 +18,7 @@ export default function Prevention(){
                 <h2>Major Causes of Air Pollution</h2>
                 <div className="grid">
                     <div className="card">
-                        <img src="/images/traffic.jps" alt="Traffic pollution" />
+                        <img src="/images/traffic.jpg" alt="Traffic pollution" />
                         <h3>Traffic & Vehicles</h3>
                         <p>Cars and diesel engines emit NO₂ adn PM2.5 , especially in cities.</p>
                     </div>
